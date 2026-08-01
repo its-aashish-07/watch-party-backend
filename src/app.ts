@@ -13,7 +13,7 @@ export function createApp() {
 
   app.set("trust proxy", 1);
   app.use(helmet());
-  app.use(cors({ origin: allowedOrigins, credentials: true }));
+  app.use(cors({ origin: true, credentials: true }));
   app.use(express.json({ limit: "32kb" }));
   app.use(rateLimit({ windowMs: 60_000, limit: 120, standardHeaders: "draft-7", legacyHeaders: false }));
 

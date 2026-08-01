@@ -11,7 +11,7 @@ import { verifyAccessToken } from "./utils/auth.js";
 const app = createApp();
 const httpServer = createServer(app);
 const io = new Server<ClientToServerEvents, ServerToClientEvents, Record<string, never>, SocketData>(httpServer, {
-  cors: { origin: allowedOrigins, credentials: true },
+  cors: { origin: true, credentials: true },
   transports: ["websocket", "polling"],
   pingInterval: 25_000,
   pingTimeout: 20_000,
