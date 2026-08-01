@@ -47,6 +47,7 @@ async function start(): Promise<void> {
     const restoredRooms = await roomManager.initialize();
     console.log(`Restored ${restoredRooms} active room(s) from MongoDB`);
   } catch (error) {
+    console.error("MongoDB Connection Error:", error);
     console.warn("WARNING: Failed to connect to MongoDB. Starting server anyway, but database features will not work until MONGODB_URI is configured properly.");
   }
 
