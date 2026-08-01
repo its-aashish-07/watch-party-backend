@@ -1,5 +1,7 @@
 # SyncRoom Watch Party Backend
 
+**Live Frontend URL:** [https://watch-party-frontend-pearl.vercel.app/](https://watch-party-frontend-pearl.vercel.app/)
+
 Express + Socket.IO + TypeScript backend with MongoDB persistence and JWT authentication.
 
 ## Features
