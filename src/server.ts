@@ -1,7 +1,7 @@
 import { createServer } from "node:http";
 import { Server } from "socket.io";
 import { createApp } from "./app.js";
-import { connectDatabase, disconnectDatabase } from "./config/database.js";
+import { connectDatabase, disconnectDatabase, databaseHealth } from "./config/database.js";
 import { allowedOrigins, env } from "./config/env.js";
 import { roomManager } from "./domain/RoomManager.js";
 import { registerSocketHandlers } from "./socket/register-handlers.js";
@@ -51,6 +51,12 @@ async function start(): Promise<void> {
   }
 
   cleanupTimer = setInterval(() => {
+    if (databaseHealth().state === "disconnected") {
+      connectDatabase()
+        .then(() => roomManager.initialize().then(r => console.log(`Restored ${r} active room(s) after reconnection`)))
+        .catch(() => {});
+    }
+
     void roomManager.cleanupExpiredRooms()
       .then((expiredRoomIds) => {
         for (const roomId of expiredRoomIds) {
