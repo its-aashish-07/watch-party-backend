@@ -37,6 +37,17 @@ export function createApp() {
     message: { ok: false, error: { code: "TOO_MANY_AUTH_ATTEMPTS", message: "Too many login or signup attempts. Try again later." } }
   });
 
+  app.use("/api", (_request, response, next) => {
+    if (!databaseHealth().connected) {
+      response.status(503).json({
+        ok: false,
+        error: { code: "DATABASE_DISCONNECTED", message: "The server is currently unable to handle this request because the database is not configured. Please ensure MONGODB_URI is set in the environment variables." }
+      });
+      return;
+    }
+    next();
+  });
+
   app.use("/api/auth", authLimiter, authRouter);
   app.use("/api/rooms", roomsRouter);
   app.use(notFoundHandler);
