@@ -1,13 +1,21 @@
 import mongoose from "mongoose";
 import { env } from "./env.js";
 
+export let lastDbError: string | null = null;
+
 export async function connectDatabase(): Promise<void> {
-  mongoose.set("strictQuery", true);
-  await mongoose.connect(env.MONGODB_URI, {
-    dbName: env.MONGODB_DB_NAME,
-    serverSelectionTimeoutMS: 10_000
-  });
-  console.log(`MongoDB connected (${env.MONGODB_DB_NAME})`);
+  try {
+    mongoose.set("strictQuery", true);
+    await mongoose.connect(env.MONGODB_URI, {
+      dbName: env.MONGODB_DB_NAME,
+      serverSelectionTimeoutMS: 10_000
+    });
+    lastDbError = null;
+    console.log(`MongoDB connected (${env.MONGODB_DB_NAME})`);
+  } catch (error) {
+    lastDbError = error instanceof Error ? error.message : String(error);
+    throw error;
+  }
 }
 
 export async function disconnectDatabase(): Promise<void> {

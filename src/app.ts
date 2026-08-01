@@ -2,7 +2,7 @@ import cors from "cors";
 import express from "express";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
-import { databaseHealth } from "./config/database.js";
+import { databaseHealth, lastDbError } from "./config/database.js";
 import { allowedOrigins } from "./config/env.js";
 import { errorHandler, notFoundHandler } from "./middleware/errors.js";
 import { authRouter } from "./routes/auth.routes.js";
@@ -41,7 +41,11 @@ export function createApp() {
     if (!databaseHealth().connected) {
       response.status(503).json({
         ok: false,
-        error: { code: "DATABASE_DISCONNECTED", message: "The server is currently unable to handle this request because the database is not configured. Please ensure MONGODB_URI is set in the environment variables." }
+        error: { 
+          code: "DATABASE_DISCONNECTED", 
+          message: "The server is currently unable to handle this request because the database failed to connect.",
+          details: lastDbError
+        }
       });
       return;
     }
