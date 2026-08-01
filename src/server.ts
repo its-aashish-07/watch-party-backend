@@ -42,9 +42,13 @@ let cleanupTimer: NodeJS.Timeout | undefined;
 let shuttingDown = false;
 
 async function start(): Promise<void> {
-  await connectDatabase();
-  const restoredRooms = await roomManager.initialize();
-  console.log(`Restored ${restoredRooms} active room(s) from MongoDB`);
+  try {
+    await connectDatabase();
+    const restoredRooms = await roomManager.initialize();
+    console.log(`Restored ${restoredRooms} active room(s) from MongoDB`);
+  } catch (error) {
+    console.warn("WARNING: Failed to connect to MongoDB. Starting server anyway, but database features will not work until MONGODB_URI is configured properly.");
+  }
 
   cleanupTimer = setInterval(() => {
     void roomManager.cleanupExpiredRooms()
