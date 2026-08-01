@@ -12,7 +12,7 @@ services:
       - key: FRONTEND_ORIGIN
         sync: false
       - key: MONGODB_URI
-        sync: false
+        value: mongodb+srv://kaashish75794_db_user:VomDPwOX6qfva6aI@cluster0.auqtmnx.mongodb.net
       - key: MONGODB_DB_NAME
         value: syncroom_watch_party
       - key: JWT_SECRET
